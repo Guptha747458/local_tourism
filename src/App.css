@@ -7,6 +7,8 @@
   --text-medium: #4b5563; /* Gray-600 */
   --background-light: #f3f4f6; /* Gray-100 */
   --star-color: #f59e0b; /* Yellow-500 */
+  --heart-color-empty: #ef4444; /* Red-500 */
+  --heart-color-filled: #ef4444; /* Red-500 */
 }
 
 /* Base Styles */
@@ -25,8 +27,10 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  padding-bottom: 4rem; /* Space for the bottom navigation */
 }
 
+/* --- Header Styles (Home/Main Header) --- */
 .header {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -65,6 +69,36 @@ body {
   margin-top: 0.25rem;
 }
 
+
+/* --- Page-Specific Headers (For Favorites Page) --- */
+.page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.page-title .header-icon {
+  color: var(--heart-color-filled);
+}
+
+.page-subtitle {
+  color: var(--text-medium);
+  font-size: 1.125rem;
+  margin-top: 0;
+}
+
+
+/* --- Main Content and Grid --- */
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -166,7 +200,13 @@ body {
   }
 }
 
-/* Spot Card */
+@media (min-width: 1280px) {
+  .spot-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* --- Spot Card & Favorites Toggle --- */
 .spot-card {
   background-color: #fff;
   border-radius: 0.75rem;
@@ -177,18 +217,18 @@ body {
   transform: scale(1);
   /* A11y: Add focus state */
   outline-offset: 4px;
+  position: relative; /* Needed for absolute positioning of favorite toggle */
 }
 
 .spot-card:hover {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  transform: scale(1.02);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* A11y: Show focus ring only when using keyboard */
 .spot-card:focus-visible {
   outline: 2px solid var(--primary-color);
 }
-
 
 .card-image-wrapper {
   position: relative;
@@ -217,6 +257,40 @@ body {
 .card-content {
   padding: 1rem;
 }
+
+/* New: Favorite Toggle Button on Card */
+.favorite-toggle-button {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 5; /* Ensure it's on top of the image */
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+  color: var(--heart-color-empty);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorite-toggle-button:hover {
+  background-color: #fff;
+  transform: scale(1.1);
+}
+
+.favorite-toggle-button.is-favorite {
+  color: #fff;
+  background-color: var(--heart-color-filled);
+}
+
+.favorite-toggle-button.is-favorite:hover {
+  background-color: #c53030; /* Darker red */
+}
+
 
 .card-title {
   font-size: 1.25rem;
@@ -309,7 +383,7 @@ body {
   margin-top: 0;
 }
 
-/* Footer */
+/* --- Footer and Navigation --- */
 .footer {
   width: 100%;
   background-color: white;
@@ -324,7 +398,63 @@ body {
   margin: 0;
 }
 
-/* Detail Modal Overlay */
+/* New: Bottom Navigation Bar (Mobile-first) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  background-color: #fff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 40; /* Below the detail overlay (z-index: 50) */
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  height: 100%;
+  border: none;
+  background: none;
+  color: var(--text-medium);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.nav-button:hover {
+  color: var(--primary-color);
+}
+
+.nav-button .icon-medium {
+  margin-bottom: 0.25rem;
+}
+
+.nav-active {
+  color: var(--primary-color);
+}
+
+@media (min-width: 768px) {
+  /* Hide bottom nav on larger screens */
+  .bottom-nav {
+    display: none;
+  }
+  /* Remove padding from app-container */
+  .app-container {
+    padding-bottom: 0;
+  }
+}
+
+/* --- Detail Modal Overlay --- */
 .detail-overlay {
   position: fixed;
   top: 0;
@@ -389,6 +519,39 @@ body {
   background-color: var(--primary-color);
   color: #fff;
 }
+
+/* New: Favorite Toggle Button on Detail Header */
+.detail-favorite-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.75rem;
+  background-color: #fff;
+  color: var(--heart-color-empty);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 51;
+}
+
+.detail-favorite-toggle:hover {
+  transform: scale(1.1);
+}
+
+.detail-favorite-toggle.is-favorite {
+  color: #fff;
+  background-color: var(--heart-color-filled);
+}
+
+.detail-favorite-toggle.is-favorite:hover {
+  background-color: #c53030; /* Darker red */
+}
+
 
 .detail-content-body {
   padding: 1.5rem;
@@ -515,6 +678,7 @@ body {
 .detail-close-button:hover {
   background-color: #4338ca; /* Darker Indigo */
 }
+
 /* --- Design Enhancements --- */
 
 /* Smooth transitions for interactive elements */
@@ -525,24 +689,6 @@ body, .spot-card, .filter-button, .detail-close-button, .card-button {
 /* Responsive typography */
 .header-title {
   font-size: clamp(1.8rem, 2vw, 2.25rem);
-}
-
-/* Expanded grid layout for XL screens */
-@media (min-width: 1280px) {
-  .spot-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Sticky footer for short pages */
-.footer {
-  position: sticky;
-  bottom: 0;
-}
-
-/* Animated hover effect for cards */
-.spot-card:hover {
-  transform: translateY(-4px) scale(1.02);
 }
 
 /* Animated star icons */
@@ -558,7 +704,7 @@ button:focus-visible,
   outline-offset: 2px;
 }
 
-/* Dark mode support */
+/* Dark mode support - ADDING FAVORITES/NAV STYLES */
 .dark-mode {
   --background-light: #1f2937;
   --text-dark: #f3f4f6;
@@ -571,9 +717,15 @@ button:focus-visible,
 .dark-mode .header,
 .dark-mode .footer,
 .dark-mode .spot-card,
-.dark-mode .filter-bar {
+.dark-mode .filter-bar,
+.dark-mode .empty-state,
+.dark-mode .bottom-nav { /* Added bottom-nav */
   background-color: #2d3748;
   color: var(--text-dark);
+}
+
+.dark-mode .bottom-nav {
+  border-top: 1px solid #374151; /* Darker border */
 }
 
 .dark-mode .filter-button {
@@ -588,4 +740,20 @@ button:focus-visible,
 .dark-mode .filter-active {
   background-color: var(--primary-color);
   color: #fff;
+}
+
+.dark-mode .detail-overlay {
+  background-color: rgba(31, 41, 55, 0.95); /* Dark background with opacity */
+}
+
+.dark-mode .page-header {
+  border-bottom: 1px solid #374151;
+}
+
+.dark-mode .favorite-toggle-button {
+  background-color: rgba(45, 55, 72, 0.85); /* Dark semi-transparent background */
+}
+
+.dark-mode .favorite-toggle-button:hover {
+  background-color: #2d3748;
 }
