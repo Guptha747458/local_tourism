@@ -20,9 +20,8 @@ const StarRating = ({ rating }) => {
     stars.push(
       <Star
         key={i}
-        className={`icon-xsmall star-icon ${
-          i < fullStars ? 'star-filled' : 'star-empty'
-        }`}
+        className={`icon-xsmall star-icon ${i < fullStars ? 'star-filled' : 'star-empty'
+          }`}
         fill={i < fullStars ? 'currentColor' : 'none'}
         aria-hidden="true"
       />
@@ -113,6 +112,7 @@ const SpotCard = ({ spot, onSelect, isFavorite, onToggleFavorite }) => (
   </div>
 );
 
+// --- UPDATED SpotDetail Component ---
 const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
   // A11y: Add 'Escape' key listener to close the modal
   useEffect(() => {
@@ -122,17 +122,22 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
       }
     };
     document.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup function to remove listener
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onBack]); // Dependency array ensures 'onBack' is not stale
+  }, [onBack]);
+
+  // NEW: Create the Google Maps URL
+  // This opens Google Maps directions with the spot as the destination.
+  // It will use the user's current location as the starting point.
+  const directionsUrl = useMemo(() => {
+    const destination = encodeURIComponent(spot.name);
+    return `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+  }, [spot.name]);
 
   return (
     <div
       className="detail-overlay"
-      // A11y: Modal attributes
       role="dialog"
       aria-modal="true"
       aria-labelledby="detail-title"
@@ -154,7 +159,7 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
           >
             <ChevronLeft className="icon-medium" />
           </button>
-          
+
           <button
             className={`detail-favorite-toggle ${isFavorite ? 'is-favorite' : ''}`}
             onClick={() => onToggleFavorite(spot.id)}
@@ -166,7 +171,6 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
 
         {/* Detail Body */}
         <div className="detail-content-body">
-          {/* A11y: This 'id' matches the 'aria-labelledby' on the overlay */}
           <h1 className="detail-title" id="detail-title">{spot.name}</h1>
 
           <div className="detail-meta-group">
@@ -185,44 +189,56 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
           <h2 className="detail-subtitle">Key Information</h2>
           <p className="detail-body-text">{spot.details}</p>
 
+          {/* --- MODIFIED SECTION --- */}
           <div className="detail-tip-box">
-              <MapPin className="icon-medium icon-indigo tip-icon" />
-              <div>
-                <h3 className="tip-title">How to Get There</h3>
-                <p className="tip-text">Location is available on most local maps. Public transport available.</p>
-              </div>
+            <MapPin className="icon-medium icon-indigo tip-icon" />
+            <div className="tip-content-wrapper"> {/* Added wrapper for layout */}
+              <h3 className="tip-title">How to Get There</h3>
+              <p className="tip-text">Location is available on most local maps. Public transport available.</p>
+
+              {/* NEW: "Get Directions" button 
+                  This is an anchor 'a' tag styled as a button.
+                */}
+              <a
+                href={directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-button get-directions-button"
+                aria-label={`Get directions to ${spot.name}`}
+              >
+                Get Directions
+              </a>
+            </div>
           </div>
+          {/* --- END OF MODIFIED SECTION --- */}
+
         </div>
 
         {/* Footer Button (for mobile usability) */}
-          <div className="detail-footer-bar">
-            <button
-              onClick={onBack}
-              className="detail-close-button"
-            >
-              <X className="icon-small icon-white mr-2" /> Close Details
-            </button>
-          </div>
+        <div className="detail-footer-bar">
+          <button
+            onClick={onBack}
+            className="detail-close-button"
+          >
+            <X className="icon-small icon-white mr-2" /> Close Details
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-// --- New Home Page Component ---
+
+// --- New Home Page Component (No changes) ---
 const HomePage = ({ selectedCategory, setSelectedCategory, filteredSpots, setSelectedSpot, favoriteSpotIds, onToggleFavorite }) => (
   <main className="main-content">
-    {/* Category Filter */}
     <CategoryFilter
       selected={selectedCategory}
       onSelect={setSelectedCategory}
     />
-
-    {/* Results Count */}
     <div className="results-count">
-        Showing **{filteredSpots.length}** {selectedCategory !== 'All' ? selectedCategory : 'total'} spots
+      Showing **{filteredSpots.length}** {selectedCategory !== 'All' ? selectedCategory : 'total'} spots
     </div>
-
-    {/* Spot List Grid */}
     <section className="spot-grid">
       {filteredSpots.length > 0 ? (
         filteredSpots.map(spot => (
@@ -244,7 +260,7 @@ const HomePage = ({ selectedCategory, setSelectedCategory, filteredSpots, setSel
   </main>
 );
 
-// --- New Favorites Page Component ---
+// --- New Favorites Page Component (No changes) ---
 const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onToggleFavorite }) => (
   <main className="main-content">
     <header className="page-header">
@@ -255,7 +271,7 @@ const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onTogg
     </header>
 
     <div className="results-count">
-        You have **{favoriteSpots.length}** favorite spots
+      You have **{favoriteSpots.length}** favorite spots
     </div>
 
     <section className="spot-grid">
@@ -279,10 +295,10 @@ const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onTogg
   </main>
 );
 
-// --- New Navigation Component ---
+// --- New Navigation Component (No changes) ---
 const BottomNavigation = ({ currentPage, onNavigate }) => (
   <nav className="bottom-nav">
-    <button 
+    <button
       className={`nav-button ${currentPage === 'home' ? 'nav-active' : ''}`}
       onClick={() => onNavigate('home')}
       aria-current={currentPage === 'home' ? 'page' : undefined}
@@ -290,7 +306,7 @@ const BottomNavigation = ({ currentPage, onNavigate }) => (
       <Home className="icon-medium" />
       Home
     </button>
-    <button 
+    <button
       className={`nav-button ${currentPage === 'favorites' ? 'nav-active' : ''}`}
       onClick={() => onNavigate('favorites')}
       aria-current={currentPage === 'favorites' ? 'page' : undefined}
@@ -301,14 +317,11 @@ const BottomNavigation = ({ currentPage, onNavigate }) => (
   </nav>
 );
 
-// --- Updated App Component ---
-
+// --- Updated App Component (No changes) ---
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedSpot, setSelectedSpot] = useState(null);
-  // State for simple navigation: 'home' or 'favorites'
-  const [currentPage, setCurrentPage] = useState('home'); 
-  // State for storing favorite spot IDs (using localStorage for persistence)
+  const [currentPage, setCurrentPage] = useState('home');
   const [favoriteSpotIds, setFavoriteSpotIds] = useState(() => {
     try {
       const storedFavorites = localStorage.getItem('azureCoastFavorites');
@@ -319,7 +332,6 @@ const App = () => {
     }
   });
 
-  // Effect to save favoriteSpotIds to localStorage whenever it changes
   useEffect(() => {
     try {
       localStorage.setItem('azureCoastFavorites', JSON.stringify(favoriteSpotIds));
@@ -328,20 +340,16 @@ const App = () => {
     }
   }, [favoriteSpotIds]);
 
-  // Function to toggle a spot's favorite status
   const toggleFavorite = (spotId) => {
     setFavoriteSpotIds(prevIds => {
       if (prevIds.includes(spotId)) {
-        // Remove from favorites
         return prevIds.filter(id => id !== spotId);
       } else {
-        // Add to favorites
         return [...prevIds, spotId];
       }
     });
   };
 
-  // Memoized list of filtered spots for the Home Page
   const filteredSpots = useMemo(() => {
     if (selectedCategory === 'All') {
       return AZURE_COAST_SPOTS;
@@ -349,24 +357,21 @@ const App = () => {
     return AZURE_COAST_SPOTS.filter(spot => spot.category === selectedCategory);
   }, [selectedCategory]);
 
-  // Memoized list of favorite spot objects
   const favoriteSpots = useMemo(() => {
     return AZURE_COAST_SPOTS.filter(spot => favoriteSpotIds.includes(spot.id));
   }, [favoriteSpotIds]);
 
-  // Handle Detail View (Modal)
   if (selectedSpot) {
     return (
       <SpotDetail
         spot={selectedSpot}
         onBack={() => setSelectedSpot(null)}
-        isFavorite={favoriteSpotIds.includes(selectedSpot.id)}
+        s isFavorite={favoriteSpotIds.includes(selectedSpot.id)}
         onToggleFavorite={toggleFavorite}
       />
     );
   }
 
-  // Render the appropriate main page based on currentPage state
   const renderMainContent = () => {
     if (currentPage === 'favorites') {
       return (
@@ -378,7 +383,6 @@ const App = () => {
         />
       );
     }
-    // Default to 'home'
     return (
       <HomePage
         selectedCategory={selectedCategory}
@@ -386,14 +390,13 @@ const App = () => {
         filteredSpots={filteredSpots}
         setSelectedSpot={setSelectedSpot}
         favoriteSpotIds={favoriteSpotIds}
-        onToggleFavorite={toggleFavorite}
+        _ onToggleFavorite={toggleFavorite}
       />
     );
   };
 
   return (
     <div className="app-container">
-      {/* Header */}
       <header className="header">
         <div className="header-content">
           <h1 className="header-title">
@@ -406,14 +409,12 @@ const App = () => {
 
       {renderMainContent()}
 
-      {/* Footer */}
       <footer className="footer">
         <p>
           © {new Date().getFullYear()} Azure Coast Guide. Frontend powered by React & Custom CSS.
         </p>
       </footer>
-      
-      {/* Bottom Navigation for routing */}
+
       <BottomNavigation currentPage={currentPage} onNavigate={setCurrentPage} />
     </div>
   );

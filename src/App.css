@@ -757,3 +757,44 @@ button:focus-visible,
 .dark-mode .favorite-toggle-button:hover {
   background-color: #2d3748;
 }
+/* --- CSS for "Get Directions" button --- */
+
+/* This wrapper helps align the text and the 
+  new button vertically inside the tip box.
+*/
+.tip-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Adds spacing between text and button */
+  width: 100%;
+}
+
+/* Styles for the new "Get Directions" button.
+  It re-uses the .card-button style but makes it
+  blue (like the icon) and gives it a specific width.
+*/
+.get-directions-button {
+  width: 100%; 
+  max-width: 250px; /* Or keep it 100% if you prefer */
+  text-align: center;
+  margin-top: 0.5rem; /* Space above the button */
+  
+  /* Matches the indigo color of the tip icon */
+  background-color: #4f46e5; 
+  color: white;
+  
+  /* Ensure consistent padding and border-radius */
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none; /* Remove underline from 'a' tag */
+  transition: background-color 0.2s;
+}
+
+.get-directions-button:hover,
+.get-directions-button:focus {
+  background-color: #4338ca; /* Darker indigo on hover/focus */
+  color: white;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}

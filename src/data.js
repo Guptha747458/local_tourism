@@ -47,7 +47,7 @@ export const AZURE_COAST_SPOTS = [
   },
   {
     id: 5,
-    name: "Old Town Market Square",
+    name: "Old Town Square",
     category: "Landmarks",
     description: "The historic heart of Azure Coast, featuring colonial architecture and weekly artisan stalls.",
     rating: 4.6,
@@ -56,7 +56,7 @@ export const AZURE_COAST_SPOTS = [
   },
   {
     id: 6,
-    name: "Sunken Shipwreck Cove",
+    name: "Shipwreck Boat Panagiotis",
     category: "Beaches",
     description: "A popular spot for snorkeling and diving, featuring the visible remains of a 1920s freighter near the shore.",
     rating: 4.4,
