@@ -271,7 +271,7 @@ const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onTogg
     </header>
 
     <div className="results-count">
-      You have **{favoriteSpots.length}** favorite spots
+      You have {favoriteSpots.length} favorite spots
     </div>
 
     <section className="spot-grid">
