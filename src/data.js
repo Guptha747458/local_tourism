@@ -20,11 +20,11 @@ export const AZURE_COAST_SPOTS = [
   },
   {
     id: 2,
-    name: "Driftwood Beach",
+    name: "Bapatla Beach",
     category: "Beaches",
     description: "Known for its unique collection of sun-bleached driftwood, this quiet beach is perfect for photography and relaxing walks.",
     rating: 4.5,
-    imagePlaceholder: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/10/d5/fc/this-place-is-amazing.jpg?w=1400&h=800&s=1",
+    imagePlaceholder: "https://image-worker.mindtrip.ai/image-resize/format=webp,w=960/https:/iorigin.mindtrip.ai/attractions/7eb4/c077/6713/4e73/8741/5904/eec8/3178",
     details: "The currents often bring interesting pieces of wood and shells. It's less crowded than the main beach and ideal for a serene morning.",
   },
   {
