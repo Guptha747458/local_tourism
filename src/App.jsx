@@ -237,7 +237,7 @@ const HomePage = ({ selectedCategory, setSelectedCategory, filteredSpots, setSel
       onSelect={setSelectedCategory}
     />
     <div className="results-count">
-      Showing **{filteredSpots.length}** {selectedCategory !== 'All' ? selectedCategory : 'total'} spots
+      Showing {filteredSpots.length} {selectedCategory !== 'All' ? selectedCategory : 'total'} spots
     </div>
     <section className="spot-grid">
       {filteredSpots.length > 0 ? (
