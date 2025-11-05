@@ -1,0 +1,190 @@
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #4338ca, orange, white); /* Uses your existing background */
+  padding: 1rem;
+}
+
+.auth-form {
+  background-color: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 0.75rem; /* Matches .spot-card */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* Matches .spot-card */
+  width: 100%;
+  max-width: 420px;
+  border-top: 4px solid var(--primary-color); /* Accent color */
+}
+
+.auth-title {
+  font-size: 1.8rem; /* Matches .page-title */
+  font-weight: 800; /* Matches .page-title */
+  color: var(--text-dark); /* Uses your text-dark */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: var(--text-medium); /* Uses your text-medium */
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-medium); /* Uses your text-medium */
+  width: 20px;
+  height: 20px;
+}
+
+.auth-input {
+  width: 80%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem; /* Smaller padding */
+  border: 1px solid #d1d5db; /* Gray-300 */
+  border-radius: 0.5rem; /* Matches .card-button */
+  font-size: 1rem;
+  color: var(--text-dark);
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus style to match your app's :focus-visible */
+.auth-input:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.auth-button {
+  /* This style is based on your .detail-close-button */
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  gap: 0.5rem;
+}
+
+.auth-button:hover {
+  background-color: #4338ca; /* Darker Indigo from .detail-close-button:hover */
+}
+
+.auth-switcher {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+.auth-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: inherit; /* Inherit size from .auth-switcher */
+}
+
+.auth-link-button:hover {
+  text-decoration: underline;
+}
+
+/* --- Logout Button Styles --- */
+/*
+  These styles position the logout button in your main header.
+  It's designed to match your .card-button (light blue).
+*/
+
+.logout-button {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  padding: 0.5rem;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 9999px; /* rounded-full */
+  width: 44px; /* Fixed size */
+  height: 44px; /* Fixed size */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #e0e7ff; /* Slightly darker light blue */
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* On mobile, make the button smaller */
+@media (max-width: 640px) {
+  .logout-button {
+    width: 40px;
+    height: 40px;
+    right: 0.75rem;
+  }
+}
+.header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 1rem;
+  position: relative; /* <--- ADD THIS LINE */
+}
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-right: 60px; /* <--- ADD THIS LINE */
+}
+/* --- Forgot Password Styles --- */
+
+.forgot-password-link {
+  margin-top: 0.5rem; /* Space it out from the 'Sign Up' link */
+  margin-bottom: 0;
+}
+
+/* Style for success/error messages in the form */
+.auth-message {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-color); /* Blue text */
+  background-color: var(--primary-light); /* Light blue background */
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+/* Make error messages red */
+.auth-message:first-letter {
+  text-transform: capitalize;
+}
+.auth-message:containing("Error:") {
+  color: #c53030; /* Red */
+  background-color: #fff5f5; /* Light red */
+}

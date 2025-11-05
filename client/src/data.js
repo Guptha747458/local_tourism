@@ -1,0 +1,75 @@
+import { MapPin, Utensils, Waves, TreePine, Sparkles } from 'lucide-react';
+
+export const CATEGORIES = [
+  { name: "All Spots", icon: Sparkles, value: "All", colorClass: "icon-indigo" },
+  { name: "Landmarks", icon: MapPin, value: "Landmarks", colorClass: "icon-yellow" },
+  { name: "Beaches", icon: Waves, value: "Beaches", colorClass: "icon-blue" },
+  { name: "Cuisine", icon: Utensils, value: "Cuisine", colorClass: "icon-red" },
+  { name: "Nature", icon: TreePine, value: "Nature", colorClass: "icon-green" },
+];
+
+export const AZURE_COAST_SPOTS = [
+  {
+    id: 1,
+    name: "Vizag Lighthouse",
+    category: "Landmarks",
+    description: "A historic 19th-century lighthouse offering breathtaking panoramic views of the entire coast. A must-see at sunset.",
+    rating: 4.8,
+    imagePlaceholder: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Lighthouse_on_Visakhapatnam_beach_road.jpg",
+    details: "Built in 1888, the lighthouse is still operational and houses a small maritime museum on the ground floor. Wear comfortable shoes for the climb! A lighthouse is a tower, building, or other type of physical structure designed to emit light from a system of lamps and lenses and to serve as a beacon for navigational aid for maritime pilots at sea or on inland waterways.",
+  },
+  {
+    id: 2,
+    name: "Bapatla Beach",
+    category: "Beaches",
+    description: "Known for its unique collection of sun-bleached driftwood, this quiet beach is perfect for photography and relaxing walks.",
+    rating: 4.5,
+    imagePlaceholder: "https://image-worker.mindtrip.ai/image-resize/format=webp,w=960/https:/iorigin.mindtrip.ai/attractions/7eb4/c077/6713/4e73/8741/5904/eec8/3178",
+    details: "The currents often bring interesting pieces of wood and shells. It's less crowded than the main beach and ideal for a serene morning.",
+  },
+  {
+    id: 3,
+    name: "The Deep Dive Bistro",
+    category: "Cuisine",
+    description: "A local favorite specializing in fresh seafood, famous for its clam chowder and oceanfront dining experience.",
+    rating: 4.9,
+    imagePlaceholder: "https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_640,ar_4:3,g_center,f_auto/cms/reviews/deep-dive/banners/1541444386.99",
+    details: "Reservations are highly recommended, especially on weekends. Try the signature 'Azure Platter' for a taste of everything!",
+  },
+  {
+    id: 4,
+    name: "Araku Valley",
+    category: "Nature",
+    description: "Araku Valley is a scenic hill station in the Eastern Ghats of Andhra Pradesh, often referred to as the Ooty of Andhra. It is renowned for its lush greenery, picturesque landscapes, misty mountains, and rich tribal culture.",
+    rating: 4.7,
+    imagePlaceholder: "https://vizagtourism.org.in/images/places-to-visit/header/araku-valley-vizag-tourism-entry-fee-timings-holidays-reviews-header.jpg",
+    details: "The trail entrance has ample parking. Bring water and watch out for local wildlife. Best visited during spring bloom.",
+  },
+  {
+    id: 5,
+    name: "Dhyana Buddha Statue",
+    category: "Landmarks",
+    description: "The Dhyana Buddha statue is a monumental 125-foot (38-meter) tall statue of the Gautama Buddha seated in a meditative posture, located in Amaravathi, Andhra Pradesh, India. It is a significant symbol of peace and a major center for Buddhist tourism.",
+    rating: 4.6,
+    imagePlaceholder: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Dhyaan_buddha_Amaravthi.jpg/960px-Dhyaan_buddha_Amaravthi.jpg",
+    details: "The Buddha is in a seated, meditative posture known as the dhyana mudra, symbolizing his attainment of enlightenment.",
+  },
+  {
+    id: 6,
+    name: "Chirala Beach",
+    category: "Beaches",
+    description: "Chirala Beach is an amazing coastal destination, known for its natural charm and the vibrant presence of local fishing culture.",
+    rating: 4.4,
+    imagePlaceholder: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSstb2miq0xOkcnP5XgAEIz5T-Sj-MrW3znSA&s",
+    details: "Gear rental is available nearby. The water is clearest in the early morning. Be mindful of strong currents further out.",
+  },
+  {
+    id: 7,
+    name: "The Spice Merchant",
+    category: "Cuisine",
+    description: "An exotic fusion restaurant offering highly-rated vegetarian and vegan options with unique flavor profiles.",
+    rating: 4.3,
+    imagePlaceholder: "https://media-cdn.tripadvisor.com/media/photo-s/19/aa/c5/b9/the-spice-merchant-front.jpg",
+    details: "A tasty meal prepared with fresh vegetables and choice cuts of meat. Known for their curried pumpkin soup and extensive tea selection. Located just off the main high street.",
+  }
+];
