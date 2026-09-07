@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle, Waves } from 'lucide-react';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
@@ -73,6 +73,11 @@ export const ResetPasswordPage = ({ onNavigateToLogin }) => {
     return (
       <div className="auth-container">
         <div className="auth-form" style={{ textAlign: 'center' }}>
+          <div className="auth-brand" style={{ justifyContent: 'center' }}>
+            <span className="auth-brand-badge">
+              <Waves size={16} /> Azure Coast Guide
+            </span>
+          </div>
           <CheckCircle style={{ width: '3rem', height: '3rem', color: '#16a34a', margin: '0 auto 1rem' }} />
           <h2 className="auth-title">Password Reset!</h2>
           <p className="auth-subtitle">Your password has been updated successfully.</p>
@@ -92,6 +97,11 @@ export const ResetPasswordPage = ({ onNavigateToLogin }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-brand">
+          <span className="auth-brand-badge">
+            <Waves size={16} /> Azure Coast Guide
+          </span>
+        </div>
         <h2 className="auth-title">Set New Password</h2>
         <p className="auth-subtitle">Choose a strong password for your account</p>
 

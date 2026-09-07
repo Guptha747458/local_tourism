@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Send } from 'lucide-react';
+import { Mail, Send, Waves } from 'lucide-react';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
@@ -46,6 +46,11 @@ export const ForgotPasswordPage = ({ onNavigateToLogin }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-brand">
+          <span className="auth-brand-badge">
+            <Waves size={16} /> Azure Coast Guide
+          </span>
+        </div>
         <h2 className="auth-title">Forgot Password</h2>
         <p className="auth-subtitle">Enter your email to get a reset link</p>
 

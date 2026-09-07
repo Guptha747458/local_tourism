@@ -1,39 +1,120 @@
+/* ==========================================================================
+   GLOBAL RESETS & AUTH PAGE STYLING
+   Warm Coastal Boutique Aesthetic
+   ========================================================================== */
+
+/* --- Auth Container & Coastal Canvas --- */
 .auth-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to right, #4338ca, orange, white); /* Uses your existing background */
-  padding: 1rem;
+  background: radial-gradient(circle at 15% 15%, #fdf5e8 0%, #f7eee1 45%, #e1f0f5 100%);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Subtle coastal wave accent in background */
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: -15%;
+  right: -10%;
+  width: 550px;
+  height: 550px;
+  border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+  background: linear-gradient(135deg, rgba(224, 90, 71, 0.08) 0%, rgba(14, 102, 126, 0.08) 100%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.auth-container::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  background: linear-gradient(135deg, rgba(14, 102, 126, 0.1) 0%, rgba(217, 119, 6, 0.08) 100%);
+  pointer-events: none;
+  filter: blur(50px);
+}
+
+/* --- Auth Form Card --- */
 .auth-form {
-  background-color: #fff;
-  padding: 2.5rem 2rem;
-  border-radius: 0.75rem; /* Matches .spot-card */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* Matches .spot-card */
+  background-color: #ffffff;
+  padding: 2.75rem 2.25rem 2.5rem;
+  border-radius: var(--radius-lg, 22px);
+  border: 1px solid var(--sand-200, #eee5d3);
+  box-shadow: 0 20px 45px -10px rgba(95, 70, 35, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
   width: 100%;
-  max-width: 420px;
-  border-top: 4px solid var(--primary-color); /* Accent color */
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top-left-radius: var(--radius-lg, 22px);
+  border-top-right-radius: var(--radius-lg, 22px);
+  background: linear-gradient(90deg, var(--ocean-700, #0e667e) 0%, var(--ocean-500, #1b9fc1) 50%, var(--sunset-coral, #e05a47) 100%);
+}
+
+/* Brand badge in auth forms */
+.auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--ocean-700, #0e667e);
+  font-family: var(--font-heading, 'Fraunces', serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.auth-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--ocean-100, #e2f2f7);
+  color: var(--ocean-800, #113c50);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid rgba(14, 102, 126, 0.15);
 }
 
 .auth-title {
-  font-size: 1.8rem; /* Matches .page-title */
-  font-weight: 800; /* Matches .page-title */
-  color: var(--text-dark); /* Uses your text-dark */
+  font-family: var(--font-heading, 'Fraunces', serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ocean-900, #0d2836);
   text-align: center;
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
 }
 
 .auth-subtitle {
-  color: var(--text-medium); /* Uses your text-medium */
-  font-size: 1rem;
+  color: var(--text-medium, #4c5e6e);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
   text-align: center;
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
 }
 
+/* --- Input Groups & Icons --- */
 .input-group {
   position: relative;
   margin-bottom: 1.25rem;
@@ -41,150 +122,115 @@
 
 .input-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-medium); /* Uses your text-medium */
-  width: 20px;
-  height: 20px;
+  color: var(--ocean-700, #0e667e);
+  width: 19px;
+  height: 19px;
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 .auth-input {
-  width: 80%;
-  padding: 0.75rem 1rem 0.75rem 2.75rem; /* Smaller padding */
-  border: 1px solid #d1d5db; /* Gray-300 */
-  border-radius: 0.5rem; /* Matches .card-button */
-  font-size: 1rem;
-  color: var(--text-dark);
-  background-color: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Focus style to match your app's :focus-visible */
-.auth-input:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--primary-light);
-}
-
-.auth-button {
-  /* This style is based on your .detail-close-button */
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: #fff;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem 0.8rem 2.75rem;
+  border: 1.5px solid var(--sand-300, #dfd2bc);
+  border-radius: var(--radius-sm, 10px);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
+  color: var(--text-dark, #192734);
+  background-color: var(--sand-50, #fdfbf7);
+  transition: all 0.2s ease;
+}
+
+.auth-input::placeholder {
+  color: var(--text-muted, #798a99);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--ocean-700, #0e667e);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(14, 102, 126, 0.18);
+}
+
+/* --- Submit CTA Button --- */
+.auth-button {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, var(--sunset-coral, #e05a47) 0%, var(--sunset-coral-hover, #c94735) 100%);
+  color: #ffffff;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
   font-weight: 700;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
-  transition: background-color 0.2s;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-pill, 9999px);
+  box-shadow: 0 8px 20px -4px rgba(224, 90, 71, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
   gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-.auth-button:hover {
-  background-color: #4338ca; /* Darker Indigo from .detail-close-button:hover */
+.auth-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--sunset-coral-hover, #c94735) 0%, var(--sunset-terracotta, #c2573a) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(224, 90, 71, 0.45);
 }
 
+.auth-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Auth Switcher & Navigation Links --- */
 .auth-switcher {
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--text-medium);
+  font-size: 0.92rem;
+  color: var(--text-medium, #4c5e6e);
+  line-height: 1.6;
+}
+
+.auth-switcher p {
+  margin: 0.35rem 0;
 }
 
 .auth-link-button {
   background: none;
   border: none;
-  padding: 0;
-  color: var(--primary-color);
-  font-weight: 600;
+  padding: 0.1rem 0.25rem;
+  color: var(--ocean-700, #0e667e);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 700;
   cursor: pointer;
-  font-size: inherit; /* Inherit size from .auth-switcher */
+  font-size: inherit;
+  transition: color 0.2s ease, text-decoration 0.2s;
 }
 
 .auth-link-button:hover {
+  color: var(--sunset-coral, #e05a47);
   text-decoration: underline;
 }
 
-/* --- Logout Button Styles --- */
-/*
-  These styles position the logout button in your main header.
-  It's designed to match your .card-button (light blue).
-*/
-
-.logout-button {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  padding: 0.5rem;
-  background-color: var(--primary-light);
-  color: var(--primary-color);
-  border: none;
-  border-radius: 9999px; /* rounded-full */
-  width: 44px; /* Fixed size */
-  height: 44px; /* Fixed size */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.logout-button:hover {
-  background-color: #e0e7ff; /* Slightly darker light blue */
-  transform: translateY(-50%) scale(1.05);
-}
-
-/* On mobile, make the button smaller */
-@media (max-width: 640px) {
-  .logout-button {
-    width: 40px;
-    height: 40px;
-    right: 0.75rem;
-  }
-}
-.header {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem 1rem;
-  position: relative; /* <--- ADD THIS LINE */
-}
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-right: 60px; /* <--- ADD THIS LINE */
-}
-/* --- Forgot Password Styles --- */
-
 .forgot-password-link {
-  margin-top: 0.5rem; /* Space it out from the 'Sign Up' link */
+  margin-top: 0.5rem;
   margin-bottom: 0;
 }
 
-/* Style for success/error messages in the form */
-.auth-message {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--primary-color); /* Blue text */
-  background-color: var(--primary-light); /* Light blue background */
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  text-align: center;
-  margin-bottom: 1.25rem;
-}
-
-/* Make error messages red */
-.auth-message:first-letter {
-  text-transform: capitalize;
-}
-.auth-message:containing("Error:") {
-  color: #c53030; /* Red */
-  background-color: #fff5f5; /* Light red */
+/* --- Responsive adjustments for Auth --- */
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 2rem 1.5rem;
+  }
+  .auth-title {
+    font-size: 1.65rem;
+  }
 }

@@ -395,11 +395,10 @@ const App = () => {
     setAuthPage('login');
   }, []);
 
-  // ── Loading splash while checking session ─────────────────────────────────
   if (authLoading) {
     return (
       <div className="auth-container">
-        <p style={{ color: 'var(--color-primary, #6366f1)', fontWeight: 600 }}>Loading…</p>
+        <p style={{ color: 'var(--primary-color, #0e667e)', fontWeight: 600, fontFamily: 'var(--font-heading)' }}>Loading your guide…</p>
       </div>
     );
   }
@@ -488,11 +487,31 @@ const App = () => {
     <div className="app-container">
       <header className="header">
         <div className="header-content">
-          <h1 className="header-title">
-            <Waves className="header-icon" />
-            Local Tourism Guide App
-          </h1>
-          <p className="header-subtitle">Discover the best sights, tastes, and nature of the coast.</p>
+          <div className="header-brand-group">
+            <h1 className="header-title">
+              <Waves className="header-icon" />
+              Azure Coast Guide
+            </h1>
+            <p className="header-subtitle">Discover the best sights, tastes, and nature of the coast.</p>
+          </div>
+          <nav className="desktop-nav" aria-label="Main Navigation">
+            <button
+              className={`desktop-nav-button ${currentPage === 'home' ? 'nav-link-active' : ''}`}
+              onClick={() => setCurrentPage('home')}
+            >
+              <Home className="icon-small" /> Explore
+            </button>
+            <button
+              className={`desktop-nav-button ${currentPage === 'favorites' ? 'nav-link-active' : ''}`}
+              onClick={() => setCurrentPage('favorites')}
+            >
+              <Heart className="icon-small" fill={currentPage === 'favorites' ? 'currentColor' : 'none'} />
+              Favorites
+              {favoriteSpotIds.length > 0 && (
+                <span className="nav-badge">{favoriteSpotIds.length}</span>
+              )}
+            </button>
+          </nav>
         </div>
         <button onClick={handleLogout} className="logout-button" aria-label="Log out">
           <LogOut className="icon-medium" />

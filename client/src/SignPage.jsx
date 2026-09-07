@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock, Waves } from 'lucide-react';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 const MIN_PW_LEN = 8;
@@ -55,8 +55,13 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-brand">
+          <span className="auth-brand-badge">
+            <Waves size={16} /> Azure Coast Guide
+          </span>
+        </div>
         <h2 className="auth-title">Create Account</h2>
-        <p className="auth-subtitle">Get started with your tourism guide</p>
+        <p className="auth-subtitle">Join us to explore the coast's hidden gems</p>
 
         {error && <p className="auth-message auth-error">{error}</p>}
 
