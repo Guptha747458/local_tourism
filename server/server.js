@@ -8,6 +8,11 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
+const dns = require('dns');
+
+// Use public DNS servers so Node.js SRV lookups work regardless of the local ISP resolver
+// (Local resolver ns2.dvpl.in refuses SRV queries from Node's libuv DNS client)
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
 
 // --- App Setup ---
 const app = express();
