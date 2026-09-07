@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
 import { Mail, Send } from 'lucide-react';
 
+const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+
 export const ForgotPasswordPage = ({ onNavigateToLogin }) => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(''); // To give user feedback
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous message
+    setMessage('');
+    setIsSuccess(false);
 
     if (!email) {
-      alert('Please enter your email.');
+      setMessage('Please enter your email address.');
       return;
     }
 
+    setLoading(true);
     try {
-      // We will build this endpoint in the next step
-      const response = await fetch('http://localhost:5001/api/forgot-password', {
+      const response = await fetch(`${BASE_URL}api/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -25,14 +30,16 @@ export const ForgotPasswordPage = ({ onNavigateToLogin }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message); // e.g., "Reset link sent to your email."
+        setIsSuccess(true);
+        setMessage(data.message);
       } else {
-        setMessage('Error: ' + data.message); // e.g., "User not found."
+        setMessage(data.message || 'Something went wrong. Please try again.');
       }
-
-    } catch (error) {
-      console.error('Network error:', error);
+    } catch (err) {
+      console.error('Network error:', err);
       setMessage('Could not connect to the server. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,7 +48,7 @@ export const ForgotPasswordPage = ({ onNavigateToLogin }) => {
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2 className="auth-title">Forgot Password</h2>
         <p className="auth-subtitle">Enter your email to get a reset link</p>
-        
+
         <div className="input-group">
           <Mail className="input-icon" />
           <input
@@ -51,27 +58,25 @@ export const ForgotPasswordPage = ({ onNavigateToLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
         </div>
-        
-        {/* Show a success/error message here */}
+
         {message && (
-          <p className="auth-message">{message}</p>
+          <p className={`auth-message ${isSuccess ? 'auth-success' : 'auth-error'}`}>
+            {message}
+          </p>
         )}
-        
-        <button type="submit" className="auth-button">
+
+        <button type="submit" className="auth-button" disabled={loading || isSuccess}>
           <Send className="icon-xsmall icon-right" />
-          Send Reset Link
+          {loading ? 'Sending…' : 'Send Reset Link'}
         </button>
-        
+
         <div className="auth-switcher">
           <p>
             Remember your password?{' '}
-            <button
-              type="button"
-              className="auth-link-button"
-              onClick={onNavigateToLogin}
-            >
+            <button type="button" className="auth-link-button" onClick={onNavigateToLogin}>
               Login
             </button>
           </p>

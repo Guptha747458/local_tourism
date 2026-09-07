@@ -1,21 +1,20 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import './App.css';
 import { CATEGORIES, AZURE_COAST_SPOTS } from './data.js';
-import { MapPin, Star, ChevronLeft, ChevronRight, X, Waves, Heart, List, Home, LogOut } from 'lucide-react'; // NEW: Added LogOut
+import { MapPin, Star, ChevronLeft, ChevronRight, X, Waves, Heart, Home, LogOut } from 'lucide-react';
 
-// NEW: Import the auth pages
-// (Assuming you saved them as separate files)
-// If you pasted them into this file, you don't need these imports.
 import { LoginPage } from './LoginPage.jsx';
 import { SignUpPage } from './SignPage.jsx';
-import { ForgotPasswordPage } from './ForgotPasswordPage.jsx'; // <-- ADD THIS
-// --- Shared Components (Kept the same) ---
+import { ForgotPasswordPage } from './ForgotPasswordPage.jsx';
+
+const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+
+// --- Shared Components ---
 
 const CategoryIcon = ({ category }) => {
   const categoryData = CATEGORIES.find(c => c.value === category);
   const Icon = categoryData?.icon || MapPin;
   const colorClass = categoryData?.colorClass || "icon-gray";
-
   return <Icon className={`icon-small icon-card ${colorClass}`} />;
 };
 
@@ -26,8 +25,7 @@ const StarRating = ({ rating }) => {
     stars.push(
       <Star
         key={i}
-        className={`icon-xsmall star-icon ${i < fullStars ? 'star-filled' : 'star-empty'
-          }`}
+        className={`icon-xsmall star-icon ${i < fullStars ? 'star-filled' : 'star-empty'}`}
         fill={i < fullStars ? 'currentColor' : 'none'}
         aria-hidden="true"
       />
@@ -42,7 +40,7 @@ const StarRating = ({ rating }) => {
   );
 };
 
-// --- Main Components (Kept the same) ---
+// --- Main Components ---
 
 const CategoryFilter = ({ selected, onSelect }) => (
   <div className="filter-bar">
@@ -60,7 +58,6 @@ const CategoryFilter = ({ selected, onSelect }) => (
   </div>
 );
 
-// SpotCard updated to include 'onToggleFavorite' and 'isFavorite'
 const SpotCard = ({ spot, onSelect, isFavorite, onToggleFavorite }) => (
   <div
     className="spot-card"
@@ -78,7 +75,7 @@ const SpotCard = ({ spot, onSelect, isFavorite, onToggleFavorite }) => (
     <button
       className={`favorite-toggle-button ${isFavorite ? 'is-favorite' : ''}`}
       onClick={(e) => {
-        e.stopPropagation(); // Prevent card click
+        e.stopPropagation();
         onToggleFavorite(spot.id);
       }}
       aria-label={isFavorite ? `Remove ${spot.name} from favorites` : `Add ${spot.name} to favorites`}
@@ -117,38 +114,23 @@ const SpotCard = ({ spot, onSelect, isFavorite, onToggleFavorite }) => (
   </div>
 );
 
-// --- UPDATED SpotDetail Component ---
 const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onBack();
-      }
+      if (e.key === 'Escape') onBack();
     };
     document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onBack]);
 
-  // NEW: Create the Google Maps URL
-  // ***FIXED***: This now points to a working Google Maps directions URL
   const directionsUrl = useMemo(() => {
     const destination = encodeURIComponent(spot.name);
-    // This will open directions from the user's current location to the destination
     return `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
   }, [spot.name]);
 
   return (
-    <div
-      className="detail-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="detail-title"
-    >
+    <div className="detail-overlay" role="dialog" aria-modal="true" aria-labelledby="detail-title">
       <div className="detail-container">
-
-        {/* Detail Header */}
         <div className="detail-header-image-wrapper">
           <img
             src={spot.imagePlaceholder}
@@ -156,14 +138,9 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
             className="detail-header-image"
             onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/800x600/cccccc/333333?text=Image+Missing"; }}
           />
-          <button
-            onClick={onBack}
-            className="detail-back-button"
-            aria-label="Go back to list"
-          >
+          <button onClick={onBack} className="detail-back-button" aria-label="Go back to list">
             <ChevronLeft className="icon-medium" />
           </button>
-
           <button
             className={`detail-favorite-toggle ${isFavorite ? 'is-favorite' : ''}`}
             onClick={() => onToggleFavorite(spot.id)}
@@ -173,10 +150,8 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
           </button>
         </div>
 
-        {/* Detail Body */}
         <div className="detail-content-body">
           <h1 className="detail-title" id="detail-title">{spot.name}</h1>
-
           <div className="detail-meta-group">
             <div className="detail-meta-item">
               <CategoryIcon category={spot.category} />
@@ -185,21 +160,14 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
             <div className="detail-meta-divider" aria-hidden="true">|</div>
             <StarRating rating={spot.rating} />
           </div>
-
-          <p className="detail-description-quote">
-            "{spot.description}"
-          </p>
-
+          <p className="detail-description-quote">"{spot.description}"</p>
           <h2 className="detail-subtitle">Key Information</h2>
           <p className="detail-body-text">{spot.details}</p>
-
-          {/* --- MODIFIED SECTION --- */}
           <div className="detail-tip-box">
             <MapPin className="icon-medium icon-indigo tip-icon" />
             <div className="tip-content-wrapper">
               <h3 className="tip-title">How to Get There</h3>
               <p className="tip-text">Location is available on most local maps. Public transport available.</p>
-
               <a
                 href={directionsUrl}
                 target="_blank"
@@ -211,16 +179,10 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
               </a>
             </div>
           </div>
-          {/* --- END OF MODIFIED SECTION --- */}
-
         </div>
 
-        {/* Footer Button (for mobile usability) */}
         <div className="detail-footer-bar">
-          <button
-            onClick={onBack}
-            className="detail-close-button"
-          >
+          <button onClick={onBack} className="detail-close-button">
             <X className="icon-small icon-white mr-2" /> Close Details
           </button>
         </div>
@@ -229,14 +191,9 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
   );
 };
 
-
-// --- New Home Page Component (No changes) ---
 const HomePage = ({ selectedCategory, setSelectedCategory, filteredSpots, setSelectedSpot, favoriteSpotIds, onToggleFavorite }) => (
   <main className="main-content">
-    <CategoryFilter
-      selected={selectedCategory}
-      onSelect={setSelectedCategory}
-    />
+    <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
     <div className="results-count">
       Showing {filteredSpots.length} {selectedCategory !== 'All' ? selectedCategory : 'total'} spots
     </div>
@@ -261,7 +218,6 @@ const HomePage = ({ selectedCategory, setSelectedCategory, filteredSpots, setSel
   </main>
 );
 
-// --- New Favorites Page Component (No changes) ---
 const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onToggleFavorite }) => (
   <main className="main-content">
     <header className="page-header">
@@ -270,11 +226,7 @@ const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onTogg
       </h2>
       <p className="page-subtitle">A collection of your top picks on the Azure Coast.</p>
     </header>
-
-    <div className="results-count">
-      You have {favoriteSpots.length} favorite spots
-    </div>
-
+    <div className="results-count">You have {favoriteSpots.length} favorite spots</div>
     <section className="spot-grid">
       {favoriteSpots.length > 0 ? (
         favoriteSpots.map(spot => (
@@ -296,7 +248,6 @@ const FavoritesPage = ({ favoriteSpots, setSelectedSpot, favoriteSpotIds, onTogg
   </main>
 );
 
-// --- New Navigation Component (No changes) ---
 const BottomNavigation = ({ currentPage, onNavigate }) => (
   <nav className="bottom-nav">
     <button
@@ -318,104 +269,150 @@ const BottomNavigation = ({ currentPage, onNavigate }) => (
   </nav>
 );
 
-// --- Updated App Component (WITH CHANGES) ---
+// --- App Component ---
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
 
-  // NEW: State for authentication
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Are we logged in?
-  const [authPage, setAuthPage] = useState('login'); // Show 'login' or 'signup'
+  // Auth state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authPage, setAuthPage] = useState('login');
+  const [userName, setUserName] = useState('');
+  const [authLoading, setAuthLoading] = useState(true); // checking session on load
 
-  // (Your existing favorites logic)
-  const [favoriteSpotIds, setFavoriteSpotIds] = useState(() => {
-    try {
-      const storedFavorites = localStorage.getItem('azureCoastFavorites');
-      return storedFavorites ? JSON.parse(storedFavorites) : [];
-    } catch (error) {
-      console.error("Could not load favorites from localStorage:", error);
-      return [];
-    }
-  });
+  // Favorites — synced to MongoDB when logged in
+  const [favoriteSpotIds, setFavoriteSpotIds] = useState([]);
+  // Debounce timer ref for saving favorites to server
+  const favSaveTimer = useRef(null);
+  // Track whether this is the first favorites load (skip save on init)
+  const favInitialized = useRef(false);
 
+  // ── Restore session on page load ──────────────────────────────────────────
   useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}api/me`, {
+          credentials: 'include',
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setIsLoggedIn(true);
+          setUserName(data.user.name);
+          // Merge server favorites with any localStorage favorites (migration path)
+          const serverFavs = data.user.favorites || [];
+          const localFavs = (() => {
+            try {
+              return JSON.parse(localStorage.getItem('azureCoastFavorites') || '[]');
+            } catch { return []; }
+          })();
+          const merged = [...new Set([...serverFavs, ...localFavs])];
+          setFavoriteSpotIds(merged);
+          favInitialized.current = true;
+        }
+      } catch (err) {
+        console.warn('Session check failed:', err);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+    checkSession();
+  }, []);
+
+  // ── Sync favorites to server (debounced, 1 second) ───────────────────────
+  useEffect(() => {
+    if (!isLoggedIn || !favInitialized.current) return;
+
+    // Also keep localStorage as offline fallback
     try {
       localStorage.setItem('azureCoastFavorites', JSON.stringify(favoriteSpotIds));
-    } catch (error) {
-      console.error("Could not save favorites to localStorage:", error);
-    }
-  }, [favoriteSpotIds]);
+    } catch { /* ignore */ }
 
-  const toggleFavorite = (spotId) => {
-    setFavoriteSpotIds(prevIds => {
-      if (prevIds.includes(spotId)) {
-        return prevIds.filter(id => id !== spotId);
-      } else {
-        return [...prevIds, spotId];
+    if (favSaveTimer.current) clearTimeout(favSaveTimer.current);
+    favSaveTimer.current = setTimeout(async () => {
+      try {
+        await fetch(`${BASE_URL}api/favorites`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ favorites: favoriteSpotIds }),
+        });
+      } catch (err) {
+        console.warn('Failed to sync favorites:', err);
       }
-    });
-  };
+    }, 1000);
+
+    return () => { if (favSaveTimer.current) clearTimeout(favSaveTimer.current); };
+  }, [favoriteSpotIds, isLoggedIn]);
+
+  const toggleFavorite = useCallback((spotId) => {
+    setFavoriteSpotIds(prevIds =>
+      prevIds.includes(spotId)
+        ? prevIds.filter(id => id !== spotId)
+        : [...prevIds, spotId]
+    );
+  }, []);
 
   const filteredSpots = useMemo(() => {
-    if (selectedCategory === 'All') {
-      return AZURE_COAST_SPOTS;
-    }
+    if (selectedCategory === 'All') return AZURE_COAST_SPOTS;
     return AZURE_COAST_SPOTS.filter(spot => spot.category === selectedCategory);
   }, [selectedCategory]);
 
-  const favoriteSpots = useMemo(() => {
-    return AZURE_COAST_SPOTS.filter(spot => favoriteSpotIds.includes(spot.id));
-  }, [favoriteSpotIds]);
+  const favoriteSpots = useMemo(() =>
+    AZURE_COAST_SPOTS.filter(spot => favoriteSpotIds.includes(spot.id)),
+    [favoriteSpotIds]
+  );
 
-
-  // NEW: Handlers for authentication
-  const handleLogin = () => {
-    // This is a simulation. In a real app, you'd get a success
-    // response from your backend API before setting this.
+  // ── Auth Handlers ─────────────────────────────────────────────────────────
+  const handleAuthSuccess = useCallback((user) => {
     setIsLoggedIn(true);
-    setAuthPage('login'); // Reset auth page
-  };
+    setUserName(user.name);
+    const serverFavs = user.favorites || [];
+    const localFavs = (() => {
+      try { return JSON.parse(localStorage.getItem('azureCoastFavorites') || '[]'); }
+      catch { return []; }
+    })();
+    const merged = [...new Set([...serverFavs, ...localFavs])];
+    setFavoriteSpotIds(merged);
+    favInitialized.current = true;
+    setAuthPage('login');
+  }, []);
 
-  const handleSignUp = () => {
-    // Simulate successful signup
-    setIsLoggedIn(true);
-    setAuthPage('login'); // Reset auth page
-  };
-
-  const handleLogout = () => {
+  const handleLogout = useCallback(async () => {
+    try {
+      await fetch(`${BASE_URL}api/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch { /* ignore network errors on logout */ }
     setIsLoggedIn(false);
-    setSelectedSpot(null); // Close detail modal on logout
-    setCurrentPage('home'); // Go back to home page
-  };
+    setUserName('');
+    setFavoriteSpotIds([]);
+    favInitialized.current = false;
+    setSelectedSpot(null);
+    setCurrentPage('home');
+    setAuthPage('login');
+  }, []);
 
+  // ── Loading splash while checking session ─────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="auth-container">
+        <p style={{ color: 'var(--color-primary, #6366f1)', fontWeight: 600 }}>Loading…</p>
+      </div>
+    );
+  }
 
-  // --- NEW: Auth Page Rendering ---
-  // If the user is NOT logged in, show the login or signup page
+  // ── Auth gates — single clean if/else chain ───────────────────────────────
   if (!isLoggedIn) {
-// --- NEW: Auth Page Rendering ---
-  // If the user is NOT logged in, show the login, signup, or forgot page
-  if (!isLoggedIn) {
-    if (authPage === 'login') {
-      return (
-        <LoginPage
-          onLoginSuccess={handleLogin}
-          onNavigateToSignUp={() => setAuthPage('signup')}
-          onNavigateToForgotPassword={() => setAuthPage('forgot')} // 1. Make sure this prop is here
-        />
-      );
-    }
     if (authPage === 'signup') {
       return (
         <SignUpPage
-          onSignUpSuccess={handleSignUp}
+          onSignUpSuccess={handleAuthSuccess}
           onNavigateToLogin={() => setAuthPage('login')}
         />
       );
     }
-
-    // --- THIS IS THE PART YOU ARE LIKELY MISSING ---
-    // 2. Add this entire 'if' block:
     if (authPage === 'forgot') {
       return (
         <ForgotPasswordPage
@@ -423,33 +420,29 @@ const App = () => {
         />
       );
     }
-    // --- END OF THE MISSING BLOCK ---
-  }
-    if (authPage === 'signup') {
-      return (
-        <SignUpPage
-          onSignUpSuccess={handleSignUp}
-          onNavigateToLogin={() => setAuthPage('login')}
-        />
-      );
-    }
+    // Default: login
+    return (
+      <LoginPage
+        onLoginSuccess={handleAuthSuccess}
+        onNavigateToSignUp={() => setAuthPage('signup')}
+        onNavigateToForgotPassword={() => setAuthPage('forgot')}
+      />
+    );
   }
 
-  // --- Main App Rendering ---
-  // If we are logged in, show the app as normal.
-
-  // (Your existing modal logic)
+  // ── Spot detail modal ─────────────────────────────────────────────────────
   if (selectedSpot) {
     return (
       <SpotDetail
         spot={selectedSpot}
         onBack={() => setSelectedSpot(null)}
-        isFavorite={favoriteSpotIds.includes(selectedSpot.id)} // Fixed typo 's isFavorite'
+        isFavorite={favoriteSpotIds.includes(selectedSpot.id)}
         onToggleFavorite={toggleFavorite}
       />
     );
   }
 
+  // ── Main app ──────────────────────────────────────────────────────────────
   const renderMainContent = () => {
     if (currentPage === 'favorites') {
       return (
@@ -468,7 +461,7 @@ const App = () => {
         filteredSpots={filteredSpots}
         setSelectedSpot={setSelectedSpot}
         favoriteSpotIds={favoriteSpotIds}
-        onToggleFavorite={toggleFavorite} // Fixed typo '_ onToggleFavorite'
+        onToggleFavorite={toggleFavorite}
       />
     );
   };
@@ -483,19 +476,17 @@ const App = () => {
           </h1>
           <p className="header-subtitle">Discover the best sights, tastes, and nature of the coast.</p>
         </div>
-
-        {/* NEW: Logout Button */}
         <button onClick={handleLogout} className="logout-button" aria-label="Log out">
           <LogOut className="icon-medium" />
+          {userName && <span className="logout-username">{userName}</span>}
         </button>
-
       </header>
 
       {renderMainContent()}
 
       <footer className="footer">
         <p>
-          © {new Date().getFullYear()} Azure Coast Guide. Frontend powered by React & Custom CSS.
+          © {new Date().getFullYear()} Azure Coast Guide. Frontend powered by React &amp; Custom CSS.
         </p>
       </footer>
 

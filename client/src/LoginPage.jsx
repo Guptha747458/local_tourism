@@ -1,46 +1,44 @@
 import React, { useState } from 'react';
 import { Mail, Lock, LogIn } from 'lucide-react';
 
-// You can save this as a new file, e.g., LoginPage.js, and import it in App.js
-// Or, you can just paste this component definition inside your App.js file.
+const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
 export const LoginPage = ({ onLoginSuccess, onNavigateToSignUp, onNavigateToForgotPassword }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // This is the NEW function for LoginPage.jsx
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (!email || !password) {
-      alert('Please fill in both fields.');
+      setError('Please fill in both fields.');
       return;
     }
 
+    setLoading(true);
     try {
-      // Send data to your new /api/login endpoint
-      const response = await fetch('http://localhost:5001/api/login', {
+      const response = await fetch(`${BASE_URL}api/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // required for httpOnly cookie to be stored
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Server said login was successful!
-        // The onLoginSuccess prop comes from App.js
-        onLoginSuccess();
+        onLoginSuccess(data.user);
       } else {
-        // Server sent an error (e.g., "Invalid credentials.")
-        alert('Login failed: ' + data.message);
+        setError(data.message || 'Login failed. Please try again.');
       }
-
-    } catch (error) {
-      console.error('Network error:', error);
-      alert('Could not connect to the server. Please try again later.');
+    } catch (err) {
+      console.error('Network error:', err);
+      setError('Could not connect to the server. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,6 +47,8 @@ export const LoginPage = ({ onLoginSuccess, onNavigateToSignUp, onNavigateToForg
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2 className="auth-title">Welcome Back!</h2>
         <p className="auth-subtitle">Sign in to access your guide</p>
+
+        {error && <p className="auth-message auth-error">{error}</p>}
 
         <div className="input-group">
           <Mail className="input-icon" />
@@ -59,6 +59,7 @@ export const LoginPage = ({ onLoginSuccess, onNavigateToSignUp, onNavigateToForg
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
         </div>
 
@@ -71,34 +72,24 @@ export const LoginPage = ({ onLoginSuccess, onNavigateToSignUp, onNavigateToForg
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
         </div>
 
-        <button type="submit" className="auth-button">
+        <button type="submit" className="auth-button" disabled={loading}>
           <LogIn className="icon-xsmall icon-right" />
-          Login
+          {loading ? 'Signing in…' : 'Login'}
         </button>
 
         <div className="auth-switcher">
           <p>
             Don't have an account?{' '}
-            <button
-              type="button"
-              className="auth-link-button"
-              onClick={onNavigateToSignUp}
-            >
+            <button type="button" className="auth-link-button" onClick={onNavigateToSignUp}>
               Sign Up
             </button>
           </p>
-
-          {/* --- NEW FORGOT PASSWORD LINK --- */}
           <p className="forgot-password-link">
-            <button
-              type="button"
-              className="auth-link-button"
-              onClick={onNavigateToForgotPassword}
-            // We will add this prop to App.js next
-            >
+            <button type="button" className="auth-link-button" onClick={onNavigateToForgotPassword}>
               Forgot Password?
             </button>
           </p>

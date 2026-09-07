@@ -1,56 +1,57 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock } from 'lucide-react';
 
-// You can save this as a new file, e.g., SignUpPage.js, and import it in App.js
-// Or, you can just paste this component definition inside your App.js file.
+const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
 export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-// In /client/src/SignUpPage.jsx
-
-  const handleSubmit = async (e) => { // Make the function async
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setError('');
+
     if (!name || !email || !password) {
-      alert('Please fill in all fields.');
+      setError('Please fill in all fields.');
       return;
     }
 
+    setLoading(true);
     try {
-      // Send data to your new backend
-      const response = await fetch('http://localhost:5001/api/signup', {
+      const response = await fetch(`${BASE_URL}api/signup`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // required for httpOnly cookie to be stored
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // HTTP 201 (Created)
-        alert(data.message); // "User created successfully!"
-        onSignUpSuccess(); // This is the function from App.js to log in
+        // Only call onSignUpSuccess when the API actually succeeds (HTTP 201)
+        onSignUpSuccess(data.user);
       } else {
-        // HTTP 400 (Bad Request) or 500 (Server Error)
-        alert('Error: ' + data.message); // e.g., "User already exists"
+        setError(data.message || 'Sign up failed. Please try again.');
       }
-
-    } catch (error) {
-      console.error('Network error:', error);
-      alert('Could not connect to the server. Please try again later.');
+    } catch (err) {
+      console.error('Network error:', err);
+      setError('Could not connect to the server. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h2 className="auth-title">Create Account</h2>
         <p className="auth-subtitle">Get started with your tourism guide</p>
-        
+
+        {error && <p className="auth-message auth-error">{error}</p>}
+
         <div className="input-group">
           <User className="input-icon" />
           <input
@@ -60,6 +61,7 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            autoComplete="name"
           />
         </div>
 
@@ -72,9 +74,10 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
         </div>
-        
+
         <div className="input-group">
           <Lock className="input-icon" />
           <input
@@ -84,21 +87,18 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="new-password"
           />
         </div>
-        
-        <button type="submit" className="auth-button">
-          Create Account
+
+        <button type="submit" className="auth-button" disabled={loading}>
+          {loading ? 'Creating account…' : 'Create Account'}
         </button>
-        
+
         <div className="auth-switcher">
           <p>
             Already have an account?{' '}
-            <button
-              type="button"
-              className="auth-link-button"
-              onClick={onNavigateToLogin}
-            >
+            <button type="button" className="auth-link-button" onClick={onNavigateToLogin}>
               Login
             </button>
           </p>
