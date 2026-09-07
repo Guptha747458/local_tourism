@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Mail, Lock } from 'lucide-react';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+const MIN_PW_LEN = 8;
 
 export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
   const [name, setName] = useState('');
@@ -10,12 +11,19 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Client-side password strength check
+  const pwTooShort = password.length > 0 && password.length < MIN_PW_LEN;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (!name || !email || !password) {
       setError('Please fill in all fields.');
+      return;
+    }
+    if (password.length < MIN_PW_LEN) {
+      setError(`Password must be at least ${MIN_PW_LEN} characters.`);
       return;
     }
 
@@ -82,16 +90,21 @@ export const SignUpPage = ({ onSignUpSuccess, onNavigateToLogin }) => {
           <Lock className="input-icon" />
           <input
             type="password"
-            placeholder="Password"
-            className="auth-input"
+            placeholder={`Password (min. ${MIN_PW_LEN} characters)`}
+            className={`auth-input${pwTooShort ? ' input-error' : ''}`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             autoComplete="new-password"
           />
         </div>
+        {pwTooShort && (
+          <p className="field-hint field-hint-error">
+            Password must be at least {MIN_PW_LEN} characters.
+          </p>
+        )}
 
-        <button type="submit" className="auth-button" disabled={loading}>
+        <button type="submit" className="auth-button" disabled={loading || pwTooShort}>
           {loading ? 'Creating account…' : 'Create Account'}
         </button>
 

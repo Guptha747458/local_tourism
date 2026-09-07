@@ -6,6 +6,7 @@ import { MapPin, Star, ChevronLeft, ChevronRight, X, Waves, Heart, Home, LogOut 
 import { LoginPage } from './LoginPage.jsx';
 import { SignUpPage } from './SignPage.jsx';
 import { ForgotPasswordPage } from './ForgotPasswordPage.jsx';
+import { ResetPasswordPage } from './ResetPasswordPage.jsx';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
@@ -167,7 +168,7 @@ const SpotDetail = ({ spot, onBack, isFavorite, onToggleFavorite }) => {
             <MapPin className="icon-medium icon-indigo tip-icon" />
             <div className="tip-content-wrapper">
               <h3 className="tip-title">How to Get There</h3>
-              <p className="tip-text">Location is available on most local maps. Public transport available.</p>
+              <p className="tip-text">{spot.transport}</p>
               <a
                 href={directionsUrl}
                 target="_blank"
@@ -400,6 +401,23 @@ const App = () => {
       <div className="auth-container">
         <p style={{ color: 'var(--color-primary, #6366f1)', fontWeight: 600 }}>Loading…</p>
       </div>
+    );
+  }
+
+  // ── Reset-password deep link — handle before auth gates ───────────────────
+  // When user clicks the emailed link (/reset-password?token=...) render the
+  // reset form regardless of login state.
+  const isResetPath = window.location.pathname === '/reset-password' ||
+    new URLSearchParams(window.location.search).has('token');
+  if (isResetPath) {
+    return (
+      <ResetPasswordPage
+        onNavigateToLogin={() => {
+          // Strip the token param and navigate back to login
+          window.history.replaceState({}, '', '/');
+          setAuthPage('login');
+        }}
+      />
     );
   }
 

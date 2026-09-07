@@ -848,4 +848,38 @@ button:focus-visible,
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 500;
-}
+}
+
+/* --- Password field validation --- */
+.auth-input.input-error {
+  border-color: #f87171;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.field-hint {
+  font-size: 0.78rem;
+  margin: -0.4rem 0 0.4rem 0.25rem;
+}
+
+.field-hint-error {
+  color: #dc2626;
+}
+
+/* Show/hide password toggle button */
+.pw-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-medium);
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.pw-toggle:hover { color: var(--primary-color); }
+

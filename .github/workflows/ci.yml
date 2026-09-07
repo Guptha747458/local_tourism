@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  lint-and-build:
+    name: Lint & Build (client)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        run: npm ci
+        working-directory: client
+
+      - name: Lint
+        run: npm run lint
+        working-directory: client
+
+      - name: Build
+        run: npm run build
+        working-directory: client
+        env:
+          # Provide a dummy base URL so Vite doesn't error on missing env var
+          VITE_REACT_APP_BACKEND_BASEURL: http://localhost:5001/
+
+  server-check:
+    name: Server dependency audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+
+      - name: Check server starts (syntax check)
+        run: node --check server.js
+        working-directory: server
+        env:
+          JWT_SECRET: ci_test_secret_not_real

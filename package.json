@@ -1,5 +1,5 @@
 {
-  "name": "local_tourism",
+  "name": "local-tourism-root",
   "version": "1.0.0",
   "description": "Azure Coast Guide — local tourism web app (React + Vite + Express + MongoDB)",
   "private": true,

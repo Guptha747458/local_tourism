@@ -17,6 +17,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.8,
     imagePlaceholder: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Lighthouse_on_Visakhapatnam_beach_road.jpg",
     details: "Built in 1888, the lighthouse is still operational and houses a small maritime museum on the ground floor. Wear comfortable shoes for the climb! A lighthouse is a tower, building, or other type of physical structure designed to emit light from a system of lamps and lenses and to serve as a beacon for navigational aid for maritime pilots at sea or on inland waterways.",
+    transport: "Located on Beach Road, Visakhapatnam. APSRTC city buses stop at RK Beach (500 m walk). Auto-rickshaws widely available. Nearest railway station: Visakhapatnam Junction (~6 km).",
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.5,
     imagePlaceholder: "https://image-worker.mindtrip.ai/image-resize/format=webp,w=960/https:/iorigin.mindtrip.ai/attractions/7eb4/c077/6713/4e73/8741/5904/eec8/3178",
     details: "The currents often bring interesting pieces of wood and shells. It's less crowded than the main beach and ideal for a serene morning.",
+    transport: "Bapatla town is on the Chennai–Kolkata rail line; the beach is 3 km from Bapatla railway station. Shared autos and cycle-rickshaws connect the station to the shore.",
   },
   {
     id: 3,
@@ -35,6 +37,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.9,
     imagePlaceholder: "https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_640,ar_4:3,g_center,f_auto/cms/reviews/deep-dive/banners/1541444386.99",
     details: "Reservations are highly recommended, especially on weekends. Try the signature 'Azure Platter' for a taste of everything!",
+    transport: "On Beach Road, Visakhapatnam. Parking available on-site. Nearest bus stop: VUDA Park (~200 m). Cab services (Ola/Uber) operate in the area.",
   },
   {
     id: 4,
@@ -44,6 +47,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.7,
     imagePlaceholder: "https://vizagtourism.org.in/images/places-to-visit/header/araku-valley-vizag-tourism-entry-fee-timings-holidays-reviews-header.jpg",
     details: "The trail entrance has ample parking. Bring water and watch out for local wildlife. Best visited during spring bloom.",
+    transport: "115 km from Visakhapatnam. The scenic Kirandul passenger train (Visakhapatnam–Araku) runs daily and is the most popular option. Road route via NH516E takes ~3 hrs by car or APSRTC bus.",
   },
   {
     id: 5,
@@ -53,6 +57,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.6,
     imagePlaceholder: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Dhyaan_buddha_Amaravthi.jpg/960px-Dhyaan_buddha_Amaravthi.jpg",
     details: "The Buddha is in a seated, meditative posture known as the dhyana mudra, symbolizing his attainment of enlightenment.",
+    transport: "Located in Amaravathi (~35 km from Guntur). APSRTC buses run from Guntur to Amaravathi regularly. Nearest major railway station: Guntur Junction. Taxis and autos available from Guntur.",
   },
   {
     id: 6,
@@ -62,6 +67,7 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.4,
     imagePlaceholder: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSstb2miq0xOkcnP5XgAEIz5T-Sj-MrW3znSA&s",
     details: "Gear rental is available nearby. The water is clearest in the early morning. Be mindful of strong currents further out.",
+    transport: "Chirala railway station is 2 km from the beach. Frequent trains on the Chennai–Howrah line. Shared autos and e-rickshaws run to the shore from the station.",
   },
   {
     id: 7,
@@ -71,5 +77,6 @@ export const AZURE_COAST_SPOTS = [
     rating: 4.3,
     imagePlaceholder: "https://media-cdn.tripadvisor.com/media/photo-s/19/aa/c5/b9/the-spice-merchant-front.jpg",
     details: "A tasty meal prepared with fresh vegetables and choice cuts of meat. Known for their curried pumpkin soup and extensive tea selection. Located just off the main high street.",
-  }
+    transport: "Located in central Visakhapatnam, accessible via APSRTC city buses (Steel Plant route). Metered autos and ride-hailing apps available. Street parking limited — prefer two-wheelers or cabs.",
+  },
 ];
