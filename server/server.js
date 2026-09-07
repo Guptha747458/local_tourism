@@ -31,9 +31,21 @@ const authLimiter = rateLimit({
 });
 
 // --- Database Connection ---
-mongoose.connect(process.env.DATABASE_URL)
-  .then(() => console.log('Connected to MongoDB!'))
-  .catch(err => console.error('Could not connect to MongoDB:', err));
+let dbReady = false;
+
+mongoose.connect(process.env.DATABASE_URL, {
+  serverSelectionTimeoutMS: 5000,  // fail fast — don't hang for 30s
+  connectTimeoutMS: 5000,
+})
+  .then(() => {
+    dbReady = true;
+    console.log('✅ Connected to MongoDB!');
+  })
+  .catch(err => {
+    console.error('❌ Could not connect to MongoDB:', err.message);
+    console.error('   → Check that your IP is whitelisted in Atlas Network Access:');
+    console.error('   → https://cloud.mongodb.com → Network Access → Add IP Address');
+  });
 
 // --- Mongoose Schema ---
 const UserSchema = new mongoose.Schema({
@@ -62,6 +74,17 @@ function signToken(userId) {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
 }
 
+// --- DB Health Middleware ---
+// Returns 503 immediately instead of hanging for 10s when MongoDB is down
+function requireDb(req, res, next) {
+  if (!dbReady) {
+    return res.status(503).json({
+      message: 'Database is not connected. Please try again in a moment.',
+    });
+  }
+  next();
+}
+
 // --- Auth Middleware ---
 function requireAuth(req, res, next) {
   const token = req.cookies?.token;
@@ -82,7 +105,7 @@ app.get('/api', (req, res) => {
 });
 
 // ── Sign Up ──────────────────────────────────────────────────────────────────
-app.post('/api/signup', authLimiter, async (req, res) => {
+app.post('/api/signup', authLimiter, requireDb, async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password)
@@ -111,7 +134,7 @@ app.post('/api/signup', authLimiter, async (req, res) => {
 });
 
 // ── Login ─────────────────────────────────────────────────────────────────────
-app.post('/api/login', authLimiter, async (req, res) => {
+app.post('/api/login', authLimiter, requireDb, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password)
@@ -145,7 +168,7 @@ app.post('/api/logout', (req, res) => {
 });
 
 // ── Me (restore session on page load) ────────────────────────────────────────
-app.get('/api/me', requireAuth, async (req, res) => {
+app.get('/api/me', requireAuth, requireDb, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password -resetToken -resetTokenExpiry');
     if (!user) return res.status(404).json({ message: 'User not found.' });
@@ -157,7 +180,7 @@ app.get('/api/me', requireAuth, async (req, res) => {
 });
 
 // ── Forgot Password ───────────────────────────────────────────────────────────
-app.post('/api/forgot-password', async (req, res) => {
+app.post('/api/forgot-password', requireDb, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required.' });
@@ -194,7 +217,7 @@ app.post('/api/forgot-password', async (req, res) => {
 });
 
 // ── Reset Password ────────────────────────────────────────────────────────────
-app.post('/api/reset-password', async (req, res) => {
+app.post('/api/reset-password', requireDb, async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     if (!token || !newPassword)
@@ -224,7 +247,7 @@ app.post('/api/reset-password', async (req, res) => {
 
 // ── Favorites ─────────────────────────────────────────────────────────────────
 // GET current favorites
-app.get('/api/favorites', requireAuth, async (req, res) => {
+app.get('/api/favorites', requireAuth, requireDb, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('favorites');
     if (!user) return res.status(404).json({ message: 'User not found.' });
@@ -235,7 +258,7 @@ app.get('/api/favorites', requireAuth, async (req, res) => {
 });
 
 // POST (replace) favorites array
-app.post('/api/favorites', requireAuth, async (req, res) => {
+app.post('/api/favorites', requireAuth, requireDb, async (req, res) => {
   try {
     const { favorites } = req.body;
     if (!Array.isArray(favorites))
